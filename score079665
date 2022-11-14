@@ -1,0 +1,23 @@
+import pandas as pd
+
+test = pd.read_csv('test.csv')
+train = pd.read_csv('train.csv')
+
+X_submit = test[['Pclass', 'SibSp', 'Parch', 'Sex', 'Fare']]
+submit =test[['PassengerId']]
+
+X_submit = pd.get_dummies(X_submit, columns=['Pclass', 'Sex'])
+
+#Fareには欠損値があったので、平均で埋める
+X_submit['Fare'] = X_submit['Fare'].fillna(X_submit['Fare'].mean())
+
+scaler = StandardScaler()
+scaler.fit(X_submit)
+
+X_submit_scaled = scaler.transform(X_submit)
+                 
+submit['Survived']=gbrt.predict(X_submit_scaled)
+
+submit
+
+submit.to_csv('submit03.csv', index=False)
